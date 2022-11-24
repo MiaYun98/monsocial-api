@@ -44,20 +44,11 @@ module.exports = {
   },
 
   // add frineds (update)
-  addfriend(req, res) {
+  addfriends(req, res) {
     User.findOneAndUpdate(
-      {
-        _id: req.parmas.userId
-      },
-      {
-        $addToSet: {
-          friends: req.params.friendId
-        }
-      },
-      {
-        runValidators: true,
-        new: true
-      }
+      {_id: req.params.userId},
+      {$addToSet: {friends: req.body.friends}},
+      {runValidators: true, new: true}
     ).then((user) =>
       !user
         ? res.status(404)
@@ -67,8 +58,10 @@ module.exports = {
       console.log(err);
       res.status(500).json(err)
     })
-  }
+  },
 
   // remove friends findoneandremove?
+  deletefriends(req, res) {
 
+  }
 };
