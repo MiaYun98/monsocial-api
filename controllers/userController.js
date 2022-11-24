@@ -50,9 +50,9 @@ module.exports = {
       {$addToSet: {friends: req.body.friends}},
       {runValidators: true, new: true}
     ).then((user) =>
-      !user
+      ! user
         ? res.status(404)
-          .json({ message: 'No user with that ID' })
+          .json({ message: 'No user with that Id' })
         : res.json(user)
     ).catch((err) => {
       console.log(err);
@@ -62,6 +62,17 @@ module.exports = {
 
   // remove friends findoneandremove?
   deletefriends(req, res) {
-
+    User.findOneAndUpdate(
+      {_id: req.params.userId},
+      {$pull: {friends: req.body.friends}},
+      {runValidators: true, new: true}
+    )
+    .then((user) => {
+      ! user
+      ? res.status(404).json({ message: 'No user with that Id'})
+      : res.json(user)
+    }).catch((err) => {
+      res.status(500).json(err)
+    })
   }
 };
