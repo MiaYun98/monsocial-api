@@ -2,11 +2,13 @@ const { Thought } = require('../models');
 const User = require('../models/User');
 
 module.exports = {
+  //get all the users
   getUsers(req, res) {
     User.find()
       .then((users) => res.json(users))
       .catch((err) => res.status(500).json(err));
   },
+  // get single user 
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
       .select('-__v')
@@ -24,6 +26,9 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
 
+  // update user 
+
+  
   // delete a user 
   deleteUser(req, res) {
     User.findOneAndDelete({ _id: req.params.userId })
@@ -47,7 +52,7 @@ module.exports = {
   addfriends(req, res) {
     User.findOneAndUpdate(
       {_id: req.params.userId},
-      {$addToSet: {friends: req.body.friends}},
+      {$addToSet: {friends: req.params.friendsId}},
       {runValidators: true, new: true}
     ).then((user) =>
       ! user
@@ -64,7 +69,7 @@ module.exports = {
   deletefriends(req, res) {
     User.findOneAndUpdate(
       {_id: req.params.userId},
-      {$pull: {friends: req.body.friends}},
+      {$pull: {friends: req.params.friendsId}},
       {runValidators: true, new: true}
     )
     .then((user) => {

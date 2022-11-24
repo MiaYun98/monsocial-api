@@ -11,7 +11,7 @@ module.exports = {
 
     // get single thought 
     getSingleThought(req, res) {
-        Thought.findOne({ _id: req.params.userId })
+        Thought.findOne({ _id: req.params.thoughtId })
             .then((thought) => {
                 !thought
                     ? res.status(404).json({ message: 'No thought with that ID' })
@@ -23,8 +23,8 @@ module.exports = {
     createThought(req, res) {
         Thought.create(req.body)
             .then((thought) => {
-                return Thought.findOneAndUpdate(
-                    { _id: req.body.thoughtId },
+                return User.findOneAndUpdate(
+                    { username: req.body.username },
                     { $addToSet: { thoughts: thought._id } },
                     { new: true }
                 )
@@ -33,8 +33,8 @@ module.exports = {
                 !user
                     ? res
                         .status(404)
-                        .json({ message: 'Tag created, but found no post with that ID' })
-                    : res.json('Created the tag 🎉')
+                        .json({ message: 'Thought created'})
+                    : res.json('Created the thought 🎉')
             )
             .catch((err) => {
                 console.log(err);
@@ -53,17 +53,18 @@ module.exports = {
             !thought
                 ? res
                     .status(404)
-                    .json({ message: 'No thought with that Id' });
+                    .json({ message: 'No thought with that Id' })
+                :res.json(thought)
         }).catch((err) => {
-            console.log(err);
-            res.status(500).json(err)
-        });
+                    console.log(err);
+                    res.status(500).json(err)
+                });
     },
 
     // delete thought 
     deleteThought(req, res) {
         Thought.findOneAndRemove(
-            { _id: req.params.id }
+            { _id: req.params.thoughtId }
         ).then((thought) => {
             !thought
                 ? res
@@ -74,7 +75,7 @@ module.exports = {
                     { $pull: { thoughts: thought._id } },
                     { new: true },
                 ).then(() => {
-                    res.json({ message: 'Thought deleted!' });
+                    res.json({ message: 'Thought deleted! from the user' });
                 }).catch((err) => {
                     console.log(err);
                     res.status(500).json(err);
