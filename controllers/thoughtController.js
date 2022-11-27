@@ -44,11 +44,10 @@ module.exports = {
 
     // update thought 
     updateThought(req, res) {
-        Thought.findOndAndUpdate(
-            {_id: req.body.userId},
+        Thought.findOneAndUpdate(
+            {_id: req.params.thoughtId},
             {$set: req.body},
-            {runValidators: true},
-            {new: true},
+            {runValidators: true, new: true},
         ).then((thought) => {
             !thought
                 ? res
